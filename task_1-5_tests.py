@@ -15,7 +15,7 @@ class HerokuSetupTest(unittest.TestCase):
             "/events", json={"date": "2022-03-21", "event": "Pierwszy dzień wiosny"})
         self.assertEqual(create_response.status_code, 200)
 
-        retrieve_response = client.get("/event/2022-03-21")
+        retrieve_response = client.get("/events/2022-03-21")
 
         self.assertEqual(retrieve_response.status_code, 200)
         response_json = retrieve_response.json()
@@ -27,7 +27,7 @@ class HerokuSetupTest(unittest.TestCase):
         )
         self.assertEqual(create_response.status_code, 200)
 
-        retrieve_response = client.get("/event/2022-03-22")
+        retrieve_response = client.get("/events/2022-03-22")
 
         self.assertEqual(retrieve_response.status_code, 200)
         response_json = retrieve_response.json()
@@ -49,7 +49,7 @@ class HerokuSetupTest(unittest.TestCase):
 
     def test_retrieve_incorrect(self):
 
-        retrieve_response = client.get("/event/2022-13-22")
+        retrieve_response = client.get("/events/2022-13-22")
 
         self.assertEqual(retrieve_response.status_code, 400)
 
@@ -58,7 +58,7 @@ class HerokuSetupTest(unittest.TestCase):
         try_dates = ["/1994-12-29", "/1995-11-28", "/2054-01-05", "/2021-02-04"]
         response_404 = None
         for date in try_dates:
-            retrieve_response = client.get("/event/" + date)
+            retrieve_response = client.get("/events/" + date)
             if retrieve_response.status_code == 404:
                 response_404 = retrieve_response
 

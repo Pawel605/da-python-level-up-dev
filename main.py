@@ -86,7 +86,7 @@ def put_event(event: EventIn):
 
 
 # Task 1.5
-@app.get("/event/{date}", status_code=200)
+@app.get("/events/{date}", status_code=200)
 def get_event(date: str):
     try:
         datetime.datetime.strptime(date, '%Y-%m-%d')
