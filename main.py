@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Response
 
 from pydantic import BaseModel
+from datetime import date, timedelta
 
 app = FastAPI()
 # to see what funny will come
@@ -47,3 +48,37 @@ def check_day_number(name: str, number: int):
         return Response(status_code=200)
     else:
         return Response(status_code=400)
+
+
+# Task 1.4
+app.event_id = 1
+app.events = {}
+
+
+class EventIn(BaseModel):
+    date: str
+    event: str
+
+
+class EventOut(BaseModel):
+    id: int
+    name: str
+    date: date
+    date_added: date
+
+
+@app.put("/events", status_code=200)
+def put_event(event: EventIn):
+    event_id = app.event_id
+    app.event_id += 1
+
+    date_added = date.today().strftime("%Y-%m-%d")
+
+    event_out = EventOut(
+        id=event_id,
+        name=event.event,
+        date=event.date,
+        date_added=date_added
+    )
+    app.events[event_id] = event_out
+    return event_out
