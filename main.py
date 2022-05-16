@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Request, Response
+import datetime
+from datetime import date
 
+from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
-from datetime import date, timedelta
 
 app = FastAPI()
 # to see what funny will come
@@ -82,3 +83,22 @@ def put_event(event: EventIn):
     )
     app.events[event_id] = event_out
     return event_out
+
+
+# Task 1.5
+@app.get("/event/{date}", status_code=200)
+def get_event(date: str):
+    try:
+        datetime.datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return Response(status_code=400)
+    events_list = []
+
+    for event in app.events.values():
+        if datetime.datetime.strptime(date, '%Y-%m-%d').date() == event.date:
+           events_list.append(event)
+
+    if len(events_list) != 0:
+        return events_list
+    else:
+        return Response(status_code=404)
