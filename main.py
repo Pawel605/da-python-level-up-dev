@@ -10,10 +10,6 @@ app.counter = 0
 class HelloResp(BaseModel):
     msg: str
 
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
-
 
 @app.get('/counter')
 def counter():
@@ -24,3 +20,11 @@ def counter():
 @app.get("/hello/{name}", response_model=HelloResp)
 async def read_item(name: str):
     return HelloResp(msg=f"Hello {name}")
+
+
+# Task 1.1
+@app.get("/")
+def root():
+    return {"start": "1970-01-01"}
+
+
