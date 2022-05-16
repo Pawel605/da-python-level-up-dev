@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 from fastapi.testclient import TestClient
@@ -9,29 +10,37 @@ client = TestClient(app)
 
 class HerokuSetupTest(unittest.TestCase):
 
-    def test_monday_correct(self):
-        response = client.get("/day?name=monday&number=1")
+    def test_add_correct(self):
+        response = client.put("/events", json={"date": "2022-03-01", "event": "Dzień Balearów"})
         self.assertEqual(response.status_code, 200)
+        response_json = response.json()
+        # Not caring about those in this test
+        del response_json["id"]
+        del response_json["date_added"]
+        self.assertEqual(
+            response_json,
+            {
+                "name": "Dzień Balearów",
+                "date": "2022-03-01",
+            },
+        )
 
-    def test_tuesday_correct(self):
-        response = client.get("/day?name=tuesday&number=2")
+    def test_add_correct_data(self):
+        response = client.put(
+            "/events", json={"date": "2022-03-01", "event": "Dzień Balearów"}
+        )
         self.assertEqual(response.status_code, 200)
+        response_json = response.json()
+        self.assertIsInstance(response_json["id"], int)
+        self.assertIsInstance(response_json["date_added"], str)
 
-    def test_saturday_correct(self):
-        response = client.get("/day?name=saturday&number=6")
-        self.assertEqual(response.status_code, 200)
-
-    def test_sunday_correct(self):
-        response = client.get("/day?name=sunday&number=7")
-        self.assertEqual(response.status_code, 200)
-
-    def test_nonday_404(self):
-        response = client.get("/day?name=nonday&number=2")
-        self.assertEqual(response.status_code, 400)
-
-    def test_sunday_4_404(self):
-        response = client.get("/day?name=sunday&number=4")
-        self.assertEqual(response.status_code, 400)
+        date_added = datetime.date.fromisoformat(response_json["date_added"])
+        self.assertGreaterEqual(
+            date_added, datetime.date.today() - datetime.timedelta(days=1)
+        )
+        self.assertLessEqual(
+            date_added, datetime.date.today() + datetime.timedelta(days=1)
+        )
 
 
 if __name__ == "__main__":
