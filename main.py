@@ -53,7 +53,7 @@ def check_day_number(name: str, number: int):
 
 # Task 1.4
 app.event_id = 1
-app.events = {}
+app.events = []
 
 
 class EventIn(BaseModel):
@@ -81,7 +81,7 @@ def put_event(event: EventIn):
         date=event.date,
         date_added=date_added
     )
-    app.events[event_id] = event_out
+    app.events.append(event_out)
     return event_out
 
 
@@ -94,7 +94,7 @@ def get_event(date: str):
         return Response(status_code=400)
     events_list = []
 
-    for event in app.events.values():
+    for event in app.events:
         if datetime.datetime.strptime(date, '%Y-%m-%d').date() == event.date:
            events_list.append(event)
 
