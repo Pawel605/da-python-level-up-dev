@@ -1,11 +1,8 @@
 import datetime
 from datetime import date
 
-from fastapi import FastAPI, Depends, status, HTTPException, Request
-from fastapi.responses import (
-    HTMLResponse,
-    JSONResponse,
-)
+from fastapi import FastAPI, Depends, status, HTTPException, Request, Response
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 
 from utils import calculate_age
@@ -45,7 +42,7 @@ def user_authorization(credentials: HTTPBasicCredentials = Depends(HTTPBasic()))
 # Task 3.3
 @app.get("/info", status_code=status.HTTP_200_OK)
 def get_info(request: Request, format: str = ""):
-    header = request.headers.get('User-Agent')
+    header = request.headers.get("User-Agent")
 
     if format == "json":
         data = {"user_agent": f"{header}"}
@@ -57,4 +54,42 @@ def get_info(request: Request, format: str = ""):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Format param is bad or empty! Param can only be in json or html format.",
+        )
+
+
+# Task 3.4
+
+app.list_of_strings = []
+
+
+@app.delete("/save/{string}")
+@app.get("/save/{string}")
+@app.put("/save/{string}")
+def save_data(request: Request, string: str = ""):
+    method = request.method
+
+    if method == "PUT":
+        if string not in app.list_of_strings:
+            app.list_of_strings.append(string)
+        return Response(status_code=status.HTTP_200_OK)
+    elif method == "GET":
+        if string in app.list_of_strings:
+            return RedirectResponse(
+                url="/info",
+                headers={"Location": "/info"},
+                status_code=status.HTTP_301_MOVED_PERMANENTLY,
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="String not found!",
+            )
+    elif method == "DELETE":
+        if string in app.list_of_strings:
+            app.list_of_strings.remove(string)
+            return Response(status_code=status.HTTP_200_OK)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Method not allowed!",
         )
