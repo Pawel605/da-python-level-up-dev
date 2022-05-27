@@ -1,9 +1,13 @@
 import datetime
-
-from fastapi import FastAPI, Depends, security, status, HTTPException
-from fastapi.responses import HTMLResponse
-from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from datetime import date
+
+from fastapi import FastAPI, Depends, status, HTTPException, Request
+from fastapi.responses import (
+    HTMLResponse,
+    JSONResponse,
+)
+from fastapi.security import HTTPBasicCredentials, HTTPBasic
+
 from utils import calculate_age
 
 app = FastAPI()
@@ -36,3 +40,21 @@ def user_authorization(credentials: HTTPBasicCredentials = Depends(HTTPBasic()))
         )
     else:
         return f"""<h1>Welcome {credentials.username}! You are {user_age}</h1>"""
+
+
+# Task 3.3
+@app.get("/info", status_code=status.HTTP_200_OK)
+def get_info(request: Request, format: str = ""):
+    header = request.headers.get('User-Agent')
+
+    if format == "json":
+        data = {"user_agent": f"{header}"}
+        return JSONResponse(data)
+    elif format == "html":
+        data = f"""<input type="text" id=user-agent name=agent value="{header}">"""
+        return HTMLResponse(data)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Format param is bad or empty! Param can only be in json or html format.",
+        )
