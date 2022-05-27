@@ -8,7 +8,7 @@ from main import app
 client = TestClient(app)
 
 
-class HerokuSetupTest(unittest.TestCase):
+class BaseUnitTests(unittest.TestCase):
     def test_correct_age_200(self):
         response = client.post(
             "/check", auth=HTTPBasicAuth(username="tester", password="1990-01-01")

@@ -8,7 +8,7 @@ from main import app
 client = TestClient(app)
 
 
-class HerokuSetupTest(unittest.TestCase):
+class BaseUnitTests(unittest.TestCase):
 
     def test_retrieve_is_list(self):
         create_response = client.put(

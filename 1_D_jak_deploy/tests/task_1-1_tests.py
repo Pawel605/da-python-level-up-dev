@@ -7,7 +7,7 @@ from main import app
 client = TestClient(app)
 
 
-class HerokuSetupTest(unittest.TestCase):
+class BaseUnitTests(unittest.TestCase):
 
     def test_status_code(self):
         response = client.get("/")

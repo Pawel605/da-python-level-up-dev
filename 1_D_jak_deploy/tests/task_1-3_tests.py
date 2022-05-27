@@ -7,7 +7,7 @@ from main import app
 client = TestClient(app)
 
 
-class HerokuSetupTest(unittest.TestCase):
+class BaseUnitTests(unittest.TestCase):
 
     def test_monday_correct(self):
         response = client.get("/day?name=monday&number=1")
