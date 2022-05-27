@@ -8,7 +8,7 @@ from main import app
 client = TestClient(app)
 
 
-class HerokuSetupTest(unittest.TestCase):
+class BaseUnitTests(unittest.TestCase):
 
     def test_add_correct(self):
         response = client.put("/events", json={"date": "2022-03-01", "event": "Dzień Balearów"})
