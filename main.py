@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from app.views import router as northwind_api_router
 from utils import calculate_age
 
+
 app = FastAPI()
 app.include_router(northwind_api_router, tags=["northwind"])
 
