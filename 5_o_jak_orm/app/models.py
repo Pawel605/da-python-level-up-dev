@@ -6,7 +6,6 @@ from sqlalchemy import (
     LargeBinary,
     SmallInteger,
     String,
-    Table,
     Text,
 )
 from sqlalchemy.ext.declarative import declarative_base
