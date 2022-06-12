@@ -73,10 +73,27 @@ async def create_supplier(
 
 
 # task 5.4
-@router.put("/suppliers/{supplier_id}", response_model=schemas.SupplierUpdate, status_code=200)
-async def update_supplier(supplier_id: PositiveInt, supplier: schemas.SupplierUpdate, db: Session = Depends(get_db)):
+@router.put(
+    "/suppliers/{supplier_id}", response_model=schemas.SupplierUpdate, status_code=200
+)
+async def update_supplier(
+    supplier_id: PositiveInt,
+    supplier: schemas.SupplierUpdate,
+    db: Session = Depends(get_db),
+):
     updated_supplier = crud.update_supplier(db, supplier_id, supplier)
     if not updated_supplier:
         raise HTTPException(status_code=404, detail="Supplier not found")
 
     return updated_supplier
+
+
+# task 5.5
+@router.delete("/suppliers/{supplier_id}", status_code=204)
+async def modify_supplier(supplier_id: int, db: Session = Depends(get_db)):
+    deleted_supplier = crud.get_supplier(db, supplier_id)
+
+    if deleted_supplier is None:
+        raise HTTPException(status_code=404)
+
+    crud.delete_supplier(db, supplier_id)

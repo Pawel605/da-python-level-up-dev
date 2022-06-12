@@ -60,12 +60,26 @@ def create_supplier(db: Session, new_supplier: schemas.NewSupplier):
 
 
 # task 5.4
-def update_supplier(db: Session, supplier_id: int, supplier_update: schemas.SupplierUpdate):
-    update_attributes = {key: value for key, value in supplier_update.dict(exclude={'supplier_id'}).items()
-                         if value is not None}
+def update_supplier(
+    db: Session, supplier_id: int, supplier_update: schemas.SupplierUpdate
+):
+    update_attributes = {
+        key: value
+        for key, value in supplier_update.dict(exclude={"supplier_id"}).items()
+        if value is not None
+    }
     if update_attributes != {}:
-        db.execute(update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).
-                   values(**update_attributes))
+        db.execute(
+            update(models.Supplier)
+            .where(models.Supplier.SupplierID == supplier_id)
+            .values(**update_attributes)
+        )
         db.commit()
 
     return get_supplier(db, supplier_id=supplier_id)
+
+
+# task 5.5
+def delete_supplier(db: Session, supplier_id: int):
+    db.query(models.Supplier).filter(models.Supplier.SupplierID == supplier_id).delete()
+    db.commit()
