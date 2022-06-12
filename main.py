@@ -6,12 +6,12 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.security import HTTPBasicCredentials, HTTPBasic
 from pydantic import BaseModel
 
-# from app.views import router as northwind_api_router
+from app.views import router as northwind_api_router
 from utils import calculate_age
 
 
 app = FastAPI()
-# app.include_router(northwind_api_router, tags=["northwind"])
+app.include_router(northwind_api_router, tags=["northwind"])
 
 # to see what funny will come
 app.counter = 0
