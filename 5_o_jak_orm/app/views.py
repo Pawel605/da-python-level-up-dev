@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from . import crud
 from . import schemas
-from . database import get_db
+from .database import get_db
 
 router = APIRouter()
 
@@ -42,18 +42,31 @@ async def get_supplier(supplier_id: PositiveInt, db: Session = Depends(get_db)):
 
 # task 5.2
 @router.get("/suppliers/{supplier_id}/products")
-async def get_supplier_products(supplier_id: PositiveInt, db: Session = Depends(get_db)):
+async def get_supplier_products(
+    supplier_id: PositiveInt, db: Session = Depends(get_db)
+):
     db_supplier = crud.get_supplier(db, supplier_id)
     if db_supplier is None:
         raise HTTPException(status_code=404, detail="Supplier not found")
 
     db_suppliers_products = crud.get_supplier_products(db, supplier_id)
-    return [{
-        "ProductID": product.ProductID,
-        "ProductName": product.ProductName,
-        "Category": {
-            "CategoryID": product.CategoryID,
-            "CategoryName": product.CategoryName,
-        },
-        "Discontinued": product.Discontinued,
-    } for product in db_suppliers_products]
+    return [
+        {
+            "ProductID": product.ProductID,
+            "ProductName": product.ProductName,
+            "Category": {
+                "CategoryID": product.CategoryID,
+                "CategoryName": product.CategoryName,
+            },
+            "Discontinued": product.Discontinued,
+        }
+        for product in db_suppliers_products
+    ]
+
+
+# task 5.3
+@router.post("/suppliers", response_model=schemas.SupplierExtended, status_code=201)
+async def create_supplier(
+    new_supplier: schemas.NewSupplier, db: Session = Depends(get_db)
+):
+    return crud.create_supplier(db, new_supplier)
