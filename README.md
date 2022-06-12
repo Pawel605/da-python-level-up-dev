@@ -25,10 +25,9 @@ cd da-python-level-up-dev
 pip install -r requirements.txt
 ```
 
-## jak uruchomić bazę lokalnie z docker-compose'a
+## how to run the database locally from docker-compose
 `docker compose up -d postgres`  
-ta komenda pobierze (jeśli jeszcze nie jest pobrany obraz) i uruchomi
-
+this command will download (if not already downloaded image) and run
 
 
 * Finally, run application with Uvicorn:
