@@ -2,13 +2,13 @@ import unittest
 
 from fastapi.testclient import TestClient
 
-from app.main import app
+from main import app
 from app.views import router
 
 app.include_router(router, tags=["northwind"])
 client = TestClient(app)
 
-expected_response_suppliers = expected_response = [
+expected_response_suppliers = [
     {"SupplierID": 1, "CompanyName": "Exotic Liquids"},
     {"SupplierID": 2, "CompanyName": "New Orleans Cajun Delights"},
     {"SupplierID": 3, "CompanyName": "Grandma Kelly's Homestead"},
