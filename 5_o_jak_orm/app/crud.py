@@ -1,4 +1,4 @@
-from sqlalchemy import func
+from sqlalchemy import func, update
 from sqlalchemy.orm import Session
 
 from . import models
@@ -57,3 +57,15 @@ def create_supplier(db: Session, new_supplier: schemas.NewSupplier):
     db.add(models.Supplier(**new_supplier.dict()))
     db.commit()
     return get_supplier(db, highest_id + 1)
+
+
+# task 5.4
+def update_supplier(db: Session, supplier_id: int, supplier_update: schemas.SupplierUpdate):
+    update_attributes = {key: value for key, value in supplier_update.dict(exclude={'supplier_id'}).items()
+                         if value is not None}
+    if update_attributes != {}:
+        db.execute(update(models.Supplier).where(models.Supplier.SupplierID == supplier_id).
+                   values(**update_attributes))
+        db.commit()
+
+    return get_supplier(db, supplier_id=supplier_id)

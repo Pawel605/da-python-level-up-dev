@@ -70,3 +70,13 @@ async def create_supplier(
     new_supplier: schemas.NewSupplier, db: Session = Depends(get_db)
 ):
     return crud.create_supplier(db, new_supplier)
+
+
+# task 5.4
+@router.put("/suppliers/{supplier_id}", response_model=schemas.SupplierUpdate, status_code=200)
+async def update_supplier(supplier_id: PositiveInt, supplier: schemas.SupplierUpdate, db: Session = Depends(get_db)):
+    updated_supplier = crud.update_supplier(db, supplier_id, supplier)
+    if not updated_supplier:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+
+    return updated_supplier
