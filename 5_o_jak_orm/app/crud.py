@@ -26,3 +26,17 @@ def get_supplier(db: Session, supplier_id: int):
         .filter(models.Supplier.SupplierID == supplier_id)
         .first()
     )
+
+
+# task 5.2
+
+def get_supplier_products(db: Session, supplier_id: int):
+    return db.query(models.Product.ProductID,
+                    models.Product.ProductName,
+                    models.Category.CategoryID,
+                    models.Category.CategoryName,
+                    models.Product.Discontinued,
+                    ).join(models.Supplier, models.Product.SupplierID == models.Supplier.SupplierID) \
+        .join(models.Category, models.Product.CategoryID == models.Category.CategoryID) \
+        .filter(models.Product.SupplierID == supplier_id) \
+        .order_by(models.Product.ProductID.desc()).all()
