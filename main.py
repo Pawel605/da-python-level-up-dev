@@ -11,7 +11,7 @@ from utils import calculate_age
 
 
 app = FastAPI()
-app.include_router(northwind_api_router, tags=["northwind"])
+# app.include_router(northwind_api_router, tags=["northwind"])
 
 # to see what funny will come
 app.counter = 0
