@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import PositiveInt
 from sqlalchemy.orm import Session
 
-import crud
-import schemas
-from database import get_db
+from . import crud
+from . import schemas
+from . database import get_db
 
 router = APIRouter()
 
@@ -26,6 +26,7 @@ async def get_shippers(db: Session = Depends(get_db)):
 
 # task 5.1
 
+
 @router.get("/suppliers", response_model=List[schemas.Supplier])
 async def get_suppliers(db: Session = Depends(get_db)):
     return crud.get_suppliers(db)
@@ -37,5 +38,3 @@ async def get_supplier(supplier_id: PositiveInt, db: Session = Depends(get_db)):
     if db_supplier is None:
         raise HTTPException(status_code=404, detail="Supplier not found")
     return db_supplier
-
-

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-import models
+
+from . import models
 
 
 def get_shippers(db: Session):
@@ -14,11 +15,14 @@ def get_shipper(db: Session, shipper_id: int):
 
 # task 5.1
 
+
 def get_suppliers(db: Session):
     return db.query(models.Supplier).all()
 
 
 def get_supplier(db: Session, supplier_id: int):
     return (
-        db.query(models.Supplier).filter(models.Supplier.SupplierID == supplier_id).first()
+        db.query(models.Supplier)
+        .filter(models.Supplier.SupplierID == supplier_id)
+        .first()
     )
